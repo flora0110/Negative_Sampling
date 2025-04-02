@@ -15,3 +15,6 @@
 ### traning
 - smolLM2-1.7B-lora-run3 (SFT): sft_smol.py
 - smolLM2-1.7B-lora-dpo-run3 (DPO): DPO4.py - LossThresholdCallback(threshold=0.1)
+- smolLM2-1.7B-lora-dpo-run6 (DPO): DPO5.py
+- SPRec_wo_STF_run2  : dataset_generate.py $\rightarrow$ DPO_from_dpoData.py
+- SPRec_run1 (SFT+DPO)  : dataset_generate.py (with smolLM2-1.7B-lora-run3 model) $\rightarrow$ DPO_from_dpoData.py
