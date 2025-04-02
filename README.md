@@ -1,4 +1,75 @@
-#
+# Clustering-Exposure Balanced Sampling
+## Overview
+
+This pipeline generates a **balanced and diverse DPO dataset** using:
+- **User Interest Clustering**
+- **Exposure-based Long-tail Negative Sampling**
+- **Hard Negative Sampling (Top-K Sampling)**
+
+Supports both **DPO** and **S-DPO** training formats.
+
+---
+
+## Sampling Procedure
+
+### 1. User Interest Cluster
+
+For each user's input history:
+- Retrieve corresponding genres from `name2genre.json`.
+- Count genre occurrences and select **Top-3 genres** as the user's **Interest Cluster**.
+
+---
+
+### 2. Hard Negative Sampling (Top-K Sampling)
+
+For each training instance:
+- Use **Top-K Sampling** with:
+  - `top_k=50`
+  - `do_sample=True`
+- **Dynamic Sampling:**
+  - If no candidate belongs to the user's Interest Cluster:
+    - Continue sampling (`.generate()`) and append new candidates.
+  - Maximum of **80 candidates** to prevent infinite loops.
+- **Select the first matching candidate** as **Hard Negative**.
+- If no match found after 80 candidates → **Randomly select one candidate**.
+
+---
+
+### 3. Long-tail Negative Sampling
+
+For each training instance:
+- From all generated `candidates`:
+  - Filter candidates **outside the user's Interest Cluster**.
+  - Sort by **Exposure Count** (frequency in training data) in ascending order.
+  - Select the **least exposed candidate** as **Long-tail Negative**.
+- If no matching candidate → **Randomly select one candidate**.
+
+---
+
+## Output Files
+
+The generated datasets are saved to:
+```
+/output/{method_name}/data/
+├── balanced_data.json            # Full dataset
+├── balanced_train.json           # Train split
+├── balanced_valid.json           # Validation split
+├── dpo_hard.json                 # DPO format with Hard Negative
+├── dpo_long_tail.json            # DPO format with Long-tail Negative
+├── dpo_two_negatives.json        # S-DPO format (two negatives)
+├── dpo_hard_train.json
+├── dpo_hard_valid.json
+├── dpo_long_tail_train.json
+├── dpo_long_tail_valid.json
+├── dpo_two_negatives_train.json
+├── dpo_two_negatives_valid.json
+```
+## Future Work
+
+- [ ] Support **S-DPO Training** (multi-negative loss using `dpo_two_negatives.json`)
+- [ ] Add **Beam Search Hard Negative Sampling** (very hard negatives with higher model confidence)
+
+
 ## BASELINE
 ### result
 | Model                              | NDCG@10   | HR@10    | Diversity | DivRatio | DGU   | MGU   | ORRatio |
@@ -22,4 +93,3 @@
 ### self play
 dataset generate $\rightarrow$ DPO
 
-## Clustering-Exposure Balanced Sampling
