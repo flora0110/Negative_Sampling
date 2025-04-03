@@ -43,11 +43,11 @@ def generate_predictions_batch(model, tokenizer, dataset, batch_size=8, max_new_
 if __name__ == "__main__":
     # === Config ===
     BASE_MODEL = "HuggingFaceTB/SmolLM2-1.7B-Instruct"
-    method_name = "SPRec_on_SFT-1"
+    method_name = "SPRec_wo_SFT_DPO_on_SFT-1"
     sample_method = "long_tail-2"
     # FINETUNED_PATH = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/{sample_method}/final_model"
     FINETUNED_PATH = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/final_model"
-    TEST_PATH = "/scratch/user/chuanhsin0110/SPRec/data/Goodreads/test.json"
+    TEST_PATH = "/scratch/user/chuanhsin0110/test_0321/sampled_data/test_sample.json"
     # output_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/{sample_method}"
     output_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}"
     USE_LORA = True
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     # model = model.to("cuda")
 
     # === Load Dataset ===
-    dataset = load_dataset("json", data_files=TEST_PATH)["train"].select(range(test_sample_size))
+    dataset = load_dataset("json", data_files=TEST_PATH)["train"]
 
     # === Predict ===
     raw_results = generate_predictions_batch(model.module, tokenizer, dataset, batch_size=batch_size)

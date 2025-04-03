@@ -46,33 +46,29 @@ For each training instance:
 
 ---
 
-## Output Files
+## Procedure
+### Data
+- sample data: 
+  - [location](./sampled_data)
+  - train_sample_size = 1024
+  - valid_sample_size = 256
+  - test_sample_size = 1000
+  - from /scratch/user/username/SPRec/data/Goodreads/
 
-The generated datasets are saved to:
-```
-/output/{method_name}/data/
-├── balanced_data.json            # Full dataset
-├── balanced_train.json           # Train split
-├── balanced_valid.json           # Validation split
-├── dpo_hard.json                 # DPO format with Hard Negative
-├── dpo_long_tail.json            # DPO format with Long-tail Negative
-├── dpo_two_negatives.json        # S-DPO format (two negatives)
-├── dpo_hard_train.json
-├── dpo_hard_valid.json
-├── dpo_long_tail_train.json
-├── dpo_long_tail_valid.json
-├── dpo_two_negatives_train.json
-├── dpo_two_negatives_valid.json
-```
+### Model
+HuggingFaceTB/SmolLM2-1.7B-Instruct
+
+### Code
+- ClusterIn-NegSample  ClusterOut-LowExposure-NegSample Generate: [dataset_generate_cluster_batch.py](dataset_generate_cluster_batch.py)
+- DPO tuning: [DPO_on_SFT.py](DPO_on_SFT.py)
+- Generate Prediction: [generate_predict_batch.py](generate_predict_batch.py)
+- Evaluate: [evaluate.py](evaluate.py)
+
 ## Future Work
 
 - [ ] Support **S-DPO Training** (multi-negative loss using `dpo_two_negatives.json`)
 - [ ] Add **Beam Search Hard Negative Sampling** (very hard negatives with higher model confidence)
 
-
-## Setup
-- model: smolLM2-1.7B-Instruct
-- dataset: GoodReads
 
 ## result
 
@@ -108,9 +104,9 @@ folders:
 | Two negative                           | 0.0077   | 0.012  |    668    | 0.0669   | 0.0597 | 0.0148 | 0.0615  | 
 
 folders:
-- [ClusterIn-NegSampling](./output/Clustering-Exposure_Balanced_Sampling_run1/hard-2) : ./output/Clustering-Exposure_Balanced_Sampling_run1/hard-2
-- [ClusterOut-LowExposure-NegSampling](./output/Clustering-Exposure_Balanced_Sampling_run1/long_tail-2): ./output/Clustering-Exposure_Balanced_Sampling_run1/long_tail-2
-- [Two negative](./output/Clustering-Exposure_Balanced_Sampling_run1/two_negatives): ./output/Clustering-Exposure_Balanced_Sampling_run1/two_negatives
+- [ClusterIn-NegSampling](./output/Clustering-Exposure_Balanced_Sampling_run1/hard-2) : output/Clustering-Exposure_Balanced_Sampling_run1/hard-2
+- [ClusterOut-LowExposure-NegSampling](./output/Clustering-Exposure_Balanced_Sampling_run1/long_tail-2): output/Clustering-Exposure_Balanced_Sampling_run1/long_tail-2
+- [Two negative](./output/Clustering-Exposure_Balanced_Sampling_run1/two_negatives): output/Clustering-Exposure_Balanced_Sampling_run1/two_negatives
 
 
 ### Baseline on DPO w/o SFT-tuned
