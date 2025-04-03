@@ -250,9 +250,9 @@ if __name__ == "__main__":
         print(f"Created output dir: {SAVE_PATH}")
     # ===========================================
     model = AutoModelForCausalLM.from_pretrained(BASE_MODEL, device_map="auto")
-    if torch.cuda.device_count() > 1:
-        print("enable parallel\n")
-        model = torch.nn.DataParallel(model) 
+    # if torch.cuda.device_count() > 1:
+    #     print("enable parallel\n")
+    #     model = torch.nn.DataParallel(model) 
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
 
     if USE_LORA:

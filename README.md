@@ -66,7 +66,6 @@ HuggingFaceTB/SmolLM2-1.7B-Instruct
 
 ## Future Work
 
-- [ ] Support **S-DPO Training** (multi-negative loss using `dpo_two_negatives.json`)
 - [ ] Add **Beam Search Hard Negative Sampling** (very hard negatives with higher model confidence)
 
 
@@ -141,7 +140,7 @@ folders:
 ## neg data
 - sample 1024 train & valid data: sampled_data/
 - predictions from origin model as neg: output/SPRec_wo_STF_run1/data/dpo_train_list.json
-- 
+- random sample: output/random_sample/
 
 
 ## 小筆記

@@ -29,12 +29,7 @@ from tqdm import tqdm
 def read_json(json_file:str) -> dict:
     f = open(json_file, 'r')
     return json.load(f)
-category = "Goodreads"
-id2name = read_json(f"./eval/{category}/id2name.json")
-name2id = read_json(f"./eval/{category}/name2id.json")
-embeddings = torch.load(f"./eval/{category}/embeddings.pt")
-name2genre = read_json(f"./eval/{category}/name2genre.json")
-genre_dict = read_json(f"./eval/{category}/genre_dict.json")
+
 def batch(list, batch_size=1):
     chunk_size = (len(list) - 1) // batch_size + 1
     for i in range(chunk_size):
@@ -52,6 +47,7 @@ def gh(category:str,test_data):
     for data in tqdm(test_data,desc="Processing category data......"):
         input = data['prompt']
         names = re.findall(r'"([^"]+)"', input)
+        
         for name in names:
             if name in name2genre:
                 in_count += 1
@@ -108,21 +104,56 @@ def update_csv(dataset_name, model_name, metrics_dict, csv_file):
 
 if __name__ == "__main__":
     print("start")
-    # input_dir = "./results/eval_lora_raw_results.json"
-    input_dir = "./results/eval_baseline_raw_results.json"
-    
+    category = "Goodreads"
+    id2name = read_json(f"./eval/{category}/id2name.json")
+    name2id = read_json(f"./eval/{category}/name2id.json")
+    embeddings = torch.load(f"./eval/{category}/embeddings.pt")
+    name2genre = read_json(f"./eval/{category}/name2genre.json")
+    genre_dict = read_json(f"./eval/{category}/genre_dict.json")
+
     # model_name = "STF_tuned_1024"
-    model_name = "origin_opt-350m"
+    # model_name = "origin_opt-350m"
+    # model_name = "smolLM2-1.7B-lora-dpo-run6"
+    #model_name = "smolLM2-1.7B-lora-run6"
+    #model_name = "molLM2-1.7B-Instruct"
+    method_name = "SPRec_wo_SFT_DPO_on_SFT-1"
+
+    # file_name = "raw_results_lora"
+    file_name = "raw_results_dpo_1000"
+    #file_name = "raw_results_baseline"
+
+    sample_method = "long_tail-2"
+
+    # input_dir = "./results/eval_lora_raw_results.json"
+    # input_dir = "./results/eval_baseline_raw_results.json"
+    # input_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/{sample_method}/predictions/{file_name}.json"
+    input_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/predictions/{file_name}.json"
+    
+    
+
     # exp_csv = "./STF_eval_metrics.csv"
     # output_dir = "./STF_eval_output.json"
-    exp_csv = "./origin_eval_metrics.csv"
-    output_dir = "./origin_eval_output.json"
-    topk = 5
+    # exp_csv = "./origin_eval_metrics.csv"
+    # output_dir = "./origin_eval_output.json"
+    topk = 10
+
+    # exp_csv = f"/scratch/user/chuanhsin0110/test_0321/output/{model_name}/{sample_method}/metrics/eval_results@{topk}.csv"
+    # output_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{model_name}/{sample_method}/metrics/eval_results@{topk}.json"
+
+    # os.makedirs(f"/scratch/user/chuanhsin0110/test_0321/output/{model_name}/{sample_method}/metrics", exist_ok=True)
+    exp_csv = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/metrics/eval_results@{topk}.csv"
+    output_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/metrics/eval_results@{topk}.json"
+
+    os.makedirs(f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/metrics", exist_ok=True)
     category = "Goodreads"
 
-    result_json = input_dir
-    f = open(result_json, 'r')
-    test_data = json.load(f)
+
+    # f = open(input_dir, 'r')
+    # test_data = json.load(f)
+    with open(input_dir, "r") as f:
+        test_data = json.load(f)
+
+    print(len(test_data))
     total = 0
     # Identify your sentence-embedding model
     print("loading model")
@@ -131,20 +162,35 @@ if __name__ == "__main__":
     
     embeddings = torch.tensor(embeddings).cuda()
     text = []
+    # for i,_ in tqdm(enumerate(test_data)):
+    #     if(len(_["prediction"])>0):
+    #         if(len(_['prediction'][0])==0):
+    #             text.append("NAN")
+    #             print("Empty prediction!")
+    #         else:
+    #             match = re.search(r'"([^"]*)', _['prediction'][0])
+    #             if match:
+    #                 name = match.group(1)
+    #                 text.append(name)
+    #             else:
+    #                 text.append(_['prediction'][0].split('\n', 1)[0])
+    #     else:
+    #         print("Empty:")
+
     for i,_ in tqdm(enumerate(test_data)):
         if(len(_["prediction"])>0):
-            if(len(_['prediction'][0])==0):
-                text.append("NAN")
-                print("Empty prediction!")
+            match = re.search(r'"([^"]*)', _['prediction'])
+            if match:
+                name = match.group(1)
+                text.append(name)
             else:
-                match = re.search(r'"([^"]*)', _['prediction'][0])
-                if match:
-                    name = match.group(1)
-                    text.append(name)
-                else:
-                    text.append(_['prediction'][0].split('\n', 1)[0])
+                text.append(_['prediction'][0].split('\n', 1)[0])
         else:
-            print("Empty:")
+            text.append("NAN")
+            print("Empty prediction!")
+
+
+    
 
     predict_embeddings = []
     for i, batch_input in tqdm(enumerate(batch(text, 8))):
@@ -154,6 +200,7 @@ if __name__ == "__main__":
     dist = torch.cdist(predict_embeddings, embeddings, p=2)
     batch_size = 1
     num_batches = (dist.size(0) + batch_size - 1) // batch_size  
+    print(f"num_batches: {num_batches}")
     rank_list = []  
     for i in tqdm(range(num_batches), desc="Processing Batches"):
         start_idx = i * batch_size
@@ -165,6 +212,7 @@ if __name__ == "__main__":
         rank_list.append(batch_rank)
 
     rank_list = torch.cat(rank_list, dim=0)
+    print(f"rank_list: {len(rank_list)}")
 
     NDCG = []
     HR = []
@@ -186,7 +234,7 @@ if __name__ == "__main__":
             rank = rank_list[i]
             # Target id
             target_name = test_data[i]['ground_truth']
-            predict_name = test_data[i]['prediction'][0]
+            # predict_name = test_data[i]['prediction']
             target_name = target_name.strip().strip('"')
             if target_name in name2id:
                 target_id = name2id[target_name]
@@ -260,7 +308,7 @@ if __name__ == "__main__":
 
     eval_dic = {}
     # eval_dic["model"] = input_dir
-    eval_dic["model"] = model_name
+    eval_dic["model"] = method_name
     eval_dic["Dis_genre"] = dis_abs_genre
     eval_dic['NDCG'] = NDCG
     eval_dic["HR"] = HR
@@ -299,4 +347,4 @@ if __name__ == "__main__":
         metric_dic[f"ORRatio@{topk}"] = sum_of_first_i_keys(sorted_dic,3) / (topk*total)
         if topk == '5':
             metric_dic[f"NDCG@{topk}"] = eval_dic["NDCG"]
-        update_csv(category,model_name,metric_dic,exp_csv)
+        update_csv(category,method_name,metric_dic,exp_csv)
