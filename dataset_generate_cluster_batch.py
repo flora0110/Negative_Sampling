@@ -244,17 +244,20 @@ if __name__ == "__main__":
         print(f"Created output dir: {SAVE_PATH}")
     # ===========================================
     model = AutoModelForCausalLM.from_pretrained(BASE_MODEL, device_map="auto")
-    if torch.cuda.device_count() > 1:
-        print("enable parallel\n")
-        model = torch.nn.DataParallel(model) 
-    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
 
     if USE_LORA:
         model = PeftModel.from_pretrained(model, FINETUNED_PATH)
 
+    if torch.cuda.device_count() > 1:
+        print("enable parallel\n")
+        model = torch.nn.DataParallel(model) 
+    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL, padding_side="left")
+
+    
+
     process_data(
         train_path="/scratch/user/chuanhsin0110/test_0321/sampled_data/train_sample.json",
         valid_path="/scratch/user/chuanhsin0110/test_0321/sampled_data/valid_sample.json",
-        model=model,
+        model=model.module,
         tokenizer=tokenizer,
     )
