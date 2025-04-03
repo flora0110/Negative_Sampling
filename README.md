@@ -92,10 +92,12 @@ folders:
 
 | Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
 |---------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
-| SPRec_on_SFT-1            | 0.0082   | 0.013  |   694     | 0.0695   | 0.0618 | 0.0153 | 0.0586  |
+| SPRec                                        | 0.0082   | 0.013  |   694     | 0.0695   | 0.0618 | 0.0153 | 0.0586  |
+| SPRec_wo_SFT(but DPO on SFT-tuned model)     | 0.0077   | 0.012  |   713     | 0.0714   | 0.0585 | 0.0148 | 0.0622  |
 
 folders:
-- SPRec: SPRec_on_SFT-1
+- SPRec: output/SPRec_on_SFT-1
+- SPRec_wo_SFT: output/SPRec_wo_SFT_DPO_on_SFT-1
 
 ### Proposed Method: Clustering-Exposure Balanced Sampling
 
@@ -106,9 +108,9 @@ folders:
 | Two negative                           | 0.0077   | 0.012  |    668    | 0.0669   | 0.0597 | 0.0148 | 0.0615  | 
 
 folders:
-- ClusterIn-NegSampling: Clustering-Exposure_Balanced_Sampling_run1/hard-2
-- ClusterOut-LowExposure-NegSampling: Clustering-Exposure_Balanced_Sampling_run1/long_tail-2
-- Two negative: Clustering-Exposure_Balanced_Sampling_run1/two negative
+- [ClusterIn-NegSampling](./output/Clustering-Exposure_Balanced_Sampling_run1/hard-2) : ./output/Clustering-Exposure_Balanced_Sampling_run1/hard-2
+- [ClusterOut-LowExposure-NegSampling](./output/Clustering-Exposure_Balanced_Sampling_run1/long_tail-2): ./output/Clustering-Exposure_Balanced_Sampling_run1/long_tail-2
+- [Two negative](./output/Clustering-Exposure_Balanced_Sampling_run1/two_negatives): ./output/Clustering-Exposure_Balanced_Sampling_run1/two_negatives
 
 
 ### Baseline on DPO w/o SFT-tuned
@@ -139,6 +141,12 @@ folders:
 - SPRec_wo_STF_run2  : dataset_generate.py $\rightarrow$ DPO_from_dpoData.py
 - SPRec_run1 (SFT+DPO)  : dataset_generate.py (with smolLM2-1.7B-lora-run3 model) $\rightarrow$ DPO_from_dpoData.py
 - Clustering-Exposure Balanced Sampling: dataset_generate_cluster_batch.py $\rightarrow$ DPO_from_dpoData.py $\rightarrow$ generate_predict_batch.py
+
+## neg data
+- sample 1024 train & valid data: sampled_data/
+- predictions from origin model as neg: output/SPRec_wo_STF_run1/data/dpo_train_list.json
+- 
+
 
 ## 小筆記
 - 之後要讓evaluate.py的update_csv都更新同一個
