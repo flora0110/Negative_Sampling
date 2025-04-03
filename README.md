@@ -72,6 +72,8 @@ The generated datasets are saved to:
 
 
 ## result
+
+### baseline
 | Model                                          | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
 |-----------------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
 | smolLM2-1.7B-Instruct (origin model)         | 0.0038   | 0.007  |   510     | 0.0511   | 0.0837 | 0.0179 | 0.1254  |
@@ -81,7 +83,8 @@ The generated datasets are saved to:
 | SPRec_wo_STF_run2                            | 0.0028   | 0.006  |   647     | 0.0648   | 0.0721 | 0.0165 | 0.0738  |
 | SPRec_run1 (SFT+DPO)                         | 0.0032   | 0.007  |   608     | 0.0609   | 0.0797 | 0.0172 | 0.1004  |
 
-| **Proposed Method: Clustering-Exposure Balanced Sampling** |         |        |           |          |        |        |         |
+### Proposed Method: Clustering-Exposure Balanced Sampling
+| Model                                          | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
 |-----------------------------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
 | ClusterIn-NegSampling                             | 0.0032   | 0.007  |   618     | 0.0619   | 0.0768 | 0.0167 | 0.0940  |
 | ClusterOut-LowExposure-NegSampling                | 0.0028   | 0.006  |   610     | 0.0611   | 0.0799 | 0.0172 | 0.1166  |
