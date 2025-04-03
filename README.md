@@ -84,20 +84,24 @@ The generated datasets are saved to:
 | SPRec_run1 (SFT+DPO)                         | 0.0032   | 0.007  |   608     | 0.0609   | 0.0797 | 0.0172 | 0.1004  |
 
 ### Proposed Method: Clustering-Exposure Balanced Sampling
-| Model                                          | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
-|-----------------------------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
-| ClusterIn-NegSampling                             | 0.0032   | 0.007  |   618     | 0.0619   | 0.0768 | 0.0167 | 0.0940  |
-| ClusterOut-LowExposure-NegSampling                | 0.0028   | 0.006  |   610     | 0.0611   | 0.0799 | 0.0172 | 0.1166  |
+### Proposed Method: Clustering-Exposure Balanced Sampling
+
+| Model                                                    | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
+|---------------------------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
+| ClusterIn-NegSampling                                   | 0.0032   | 0.007  |    618    | 0.0619   | 0.0768 | 0.0167 | 0.0940  |
+| ClusterOut-LowExposure-NegSampling                      | 0.0028   | 0.006  |    610    | 0.0611   | 0.0799 | 0.0172 | 0.1166  |
+| Clustering-Exposure_Balanced_Sampling_run1 two negative | 0.0077   | 0.012  |    668    | 0.0669   | 0.0597 | 0.0148 | 0.0615  
+| ClusterIn-NegSampling DPO on SFT-tuned                  | 0.0077   | 0.012  |    666    | 0.0667   | 0.0593 | 0.0149 | 0.0631  |
+| ClusterOut-LowExposure-NegSampling DPO on SFT-tuned     | 0.0077   | 0.012  |    694    | 0.0695   | 0.0603 | 0.0155 | 0.0620  |
 
 
 
-### code
+## code
 - smolLM2-1.7B-lora-run3 (SFT): sft_smol.py
 - smolLM2-1.7B-lora-dpo-run3 (DPO): DPO4.py - LossThresholdCallback(threshold=0.1)
 - smolLM2-1.7B-lora-dpo-run6 (DPO): DPO5.py
 - SPRec_wo_STF_run2  : dataset_generate.py $\rightarrow$ DPO_from_dpoData.py
 - SPRec_run1 (SFT+DPO)  : dataset_generate.py (with smolLM2-1.7B-lora-run3 model) $\rightarrow$ DPO_from_dpoData.py
+- Clustering-Exposure Balanced Sampling: dataset_generate_cluster_batch.py $\rightarrow$ DPO_from_dpoData.py $\rightarrow$ generate_predict_batch.py
 
-### self play
-dataset generate $\rightarrow$ DPO
 

@@ -151,13 +151,14 @@ def train_model(model, ref_model, tokenizer, dpo_data, val_data, output_dir="./o
 if __name__ == "__main__":
     resume_from_checkpoint = False
 
-    method_name = "SPRec_run"
+    method_name = "Clustering-Exposure_Balanced_Sampling_run"
     model_name = "HuggingFaceTB/SmolLM2-1.7B-Instruct"
     run = "1"
+    sample_method = "long_tail"
 
-    output_path = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}{run}"
-    train_data_path = f"/scratch/user/chuanhsin0110/test_0321/output/SPRec_run1/data/dpo_train.json"
-    valid_data_path = f"/scratch/user/chuanhsin0110/test_0321/output/SPRec_run1/data/dpo_valid.json"
+    output_path = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}{run}/{sample_method}"
+    train_data_path = f"/scratch/user/chuanhsin0110/test_0321/output/Clustering-Exposure_Balanced_Sampling_run1/data/dpo_long_tail_train.json"
+    valid_data_path = f"/scratch/user/chuanhsin0110/test_0321/output/Clustering-Exposure_Balanced_Sampling_run1/data/dpo_long_tail_valid.json"
     # train_data_path = f"/scratch/user/chuanhsin0110/test_0321/output/random_sample/train.json"
     # valid_data_path = f"/scratch/user/chuanhsin0110/test_0321/output/random_sample/valid.json"
 

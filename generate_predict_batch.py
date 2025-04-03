@@ -43,11 +43,13 @@ def generate_predictions_batch(model, tokenizer, dataset, batch_size=8, max_new_
 if __name__ == "__main__":
     # === Config ===
     BASE_MODEL = "HuggingFaceTB/SmolLM2-1.7B-Instruct"
-    method_name = "Clustering-Exposure_Balanced_Sampling_run1"
-    sample_method = "long_tail"
-    FINETUNED_PATH = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/{sample_method}/final_model"
+    method_name = "SPRec_on_SFT-1"
+    sample_method = "long_tail-2"
+    # FINETUNED_PATH = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/{sample_method}/final_model"
+    FINETUNED_PATH = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/final_model"
     TEST_PATH = "/scratch/user/chuanhsin0110/SPRec/data/Goodreads/test.json"
-    output_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/{sample_method}"
+    # output_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/{sample_method}"
+    output_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}"
     USE_LORA = True
     test_sample_size = 1000
     batch_size = 8
