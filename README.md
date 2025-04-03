@@ -70,31 +70,67 @@ The generated datasets are saved to:
 - [ ] Add **Beam Search Hard Negative Sampling** (very hard negatives with higher model confidence)
 
 
+## Setup
+- model: smolLM2-1.7B-Instruct
+- dataset: GoodReads
 
 ## result
 
-### baseline
-| Model                                          | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
-|-----------------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
-| smolLM2-1.7B-Instruct (origin model)         | 0.0038   | 0.007  |   510     | 0.0511   | 0.0837 | 0.0179 | 0.1254  |
-| smolLM2-1.7B-lora-run3 (SFT)                 | 0.0043   | 0.010  |   608     | 0.0609   | 0.0615 | 0.0163 | 0.0707  |
-| smolLM2-1.7B-lora-dpo-run3 (DPO)             | 0.0025   | 0.006  |   735     | 0.0736   | 0.0747 | 0.0148 | 0.0868  |
-| smolLM2-1.7B-lora-dpo-run6 (DPO)             | 0.0031   | 0.007  |   542     | 0.0543   | 0.0797 | 0.0172 | 0.1176  |
-| SPRec_wo_STF_run2                            | 0.0028   | 0.006  |   647     | 0.0648   | 0.0721 | 0.0165 | 0.0738  |
-| SPRec_run1 (SFT+DPO)                         | 0.0032   | 0.007  |   608     | 0.0609   | 0.0797 | 0.0172 | 0.1004  |
+### Direct Generate Baseline
+| Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
+|---------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
+| origin model              | 0.0038   | 0.007  |   510     | 0.0511   | 0.0837 | 0.0179 | 0.1254  |
+| SFT-tuned                 | 0.0043   | 0.010  |   608     | 0.0609   | 0.0615 | 0.0163 | 0.0707  |
+| DPO-tuned w RN            | 0.0077   | 0.012  |   670     | 0.0671   | 0.0601 | 0.0161 | 0.0648  |
+
+folders:
+- origin model: 
+- SFT-tuned: smolLM2-1.7B-lora-run3
+- DPO_RN_on_SFT-1: DPO_RN_on_SFT-1
+
+### Self-Play Baseline
+
+| Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
+|---------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
+| SPRec_on_SFT-1            | 0.0082   | 0.013  |   694     | 0.0695   | 0.0618 | 0.0153 | 0.0586  |
+
+folders:
+- SPRec: SPRec_on_SFT-1
 
 ### Proposed Method: Clustering-Exposure Balanced Sampling
-### Proposed Method: Clustering-Exposure Balanced Sampling
 
-| Model                                                    | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
-|---------------------------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
-| ClusterIn-NegSampling                                   | 0.0032   | 0.007  |    618    | 0.0619   | 0.0768 | 0.0167 | 0.0940  |
-| ClusterOut-LowExposure-NegSampling                      | 0.0028   | 0.006  |    610    | 0.0611   | 0.0799 | 0.0172 | 0.1166  |
-| Clustering-Exposure_Balanced_Sampling_run1 two negative | 0.0077   | 0.012  |    668    | 0.0669   | 0.0597 | 0.0148 | 0.0615  
-| ClusterIn-NegSampling DPO on SFT-tuned                  | 0.0077   | 0.012  |    666    | 0.0667   | 0.0593 | 0.0149 | 0.0631  |
-| ClusterOut-LowExposure-NegSampling DPO on SFT-tuned     | 0.0077   | 0.012  |    694    | 0.0695   | 0.0603 | 0.0155 | 0.0620  |
+| Model                                  | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
+|----------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
+| ClusterIn-NegSampling                  | 0.0077   | 0.012  |    666    | 0.0667   | 0.0593 | 0.0149 | 0.0631  |
+| ClusterOut-LowExposure-NegSampling     | 0.0077   | 0.012  |    694    | 0.0695   | 0.0603 | 0.0155 | 0.0620  |
+| Two negative                           | 0.0077   | 0.012  |    668    | 0.0669   | 0.0597 | 0.0148 | 0.0615  | 
+
+folders:
+- ClusterIn-NegSampling: Clustering-Exposure_Balanced_Sampling_run1/hard-2
+- ClusterOut-LowExposure-NegSampling: Clustering-Exposure_Balanced_Sampling_run1/long_tail-2
+- Two negative: Clustering-Exposure_Balanced_Sampling_run1/two negative
 
 
+### Baseline on DPO w/o SFT-tuned
+
+| Model                         | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
+|-------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
+| SPRec_wo_STF                  | 0.0028   | 0.006  |   647     | 0.0648   | 0.0721 | 0.0165 | 0.0738  |
+| SPRec                         | 0.0032   | 0.007  |   608     | 0.0609   | 0.0797 | 0.0172 | 0.1004  |
+
+folders:
+- SPRec_wo_STF: SPRec_wo_STF_run2
+- SPRec: SPRec_run1
+
+### Clustering-Exposure Balanced Sampling on DPO w/o SFT-tuned
+| Model                                            | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
+|--------------------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
+| ClusterIn-NegSampling                            | 0.0032   | 0.007  |    618    | 0.0619   | 0.0768 | 0.0167 | 0.0940  |
+| ClusterOut-LowExposure-NegSampling               | 0.0028   | 0.006  |    610    | 0.0611   | 0.0799 | 0.0172 | 0.1166  |
+
+folders:
+- ClusterIn-NegSampling: Clustering-Exposure_Balanced_Sampling_run1/hard
+- ClusterOut-LowExposure-NegSampling: Clustering-Exposure_Balanced_Sampling_run1/long_tail
 
 ## code
 - smolLM2-1.7B-lora-run3 (SFT): sft_smol.py
@@ -104,4 +140,7 @@ The generated datasets are saved to:
 - SPRec_run1 (SFT+DPO)  : dataset_generate.py (with smolLM2-1.7B-lora-run3 model) $\rightarrow$ DPO_from_dpoData.py
 - Clustering-Exposure Balanced Sampling: dataset_generate_cluster_batch.py $\rightarrow$ DPO_from_dpoData.py $\rightarrow$ generate_predict_batch.py
 
-
+## 小筆記
+- 之後要讓evaluate.py的update_csv都更新同一個
+- our方法在DGU, MGU小贏，其他都輸
+- two negative最好，可能可以改mutiple negative，或再加一層beam search出來neg 做DPO 的應該會貼近SPRec?(接近模型本身輸出->最有信心->最難)
