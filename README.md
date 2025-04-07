@@ -112,7 +112,7 @@ folders:
 
 | Model                         | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | NotInRatio ↓ |
 |-------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|:-------:|
-| SPRec_wo_STF                  | 0.0028   | 0.006  |   647     | 0.0648   | 0.0721 | 0.0165 | 0.0738  |
+| SPRec_wo_STF                  | 0.0028   | 0.006  |   647     | 0.0648   | 0.0721 | 0.0165 | 0.0738  | 0.639 |
 | SPRec                         | 0.0032   | 0.007  |   608     | 0.0609   | 0.0797 | 0.0172 | 0.1004  | 0.542 |
 
 folders:
@@ -128,6 +128,18 @@ folders:
 folders:
 - ClusterIn-NegSampling: Clustering-Exposure_Balanced_Sampling_run1/hard
 - ClusterOut-LowExposure-NegSampling: Clustering-Exposure_Balanced_Sampling_run1/long_tail
+
+## Constrained Decoding (only for predict output)
+
+### Clustering-Exposure_Balanced_Sampling
+| Model                                          | NDCG@10 ↑             | HR@10 ↑ | Diversity ↑ | DivRatio ↑            | DGU ↓                 | MGU ↓                 | ORRatio ↓             | NotInRatio ↓ |
+|------------------------------------------------|-----------------------|---------|-------------|-----------------------|-----------------------|-----------------------|-----------------------|--------------|
+| Clustering-Exposure_Balanced_Sampling_run2     | 0.008558293624656106  | 0.015   | 637         | 0.06382765531062125    | 0.07014675010805173   | 0.016838815148191386   | 0.06212424849699399    | 0.0          |
+| Constrained_Predict_Generate/SPRec             | 0.008558293624656106  | 0.015   | 649         | 0.06503006012024048    | 0.07151912656688314   | 0.017326685391871897   | 0.061122244488977955    | 0.0          |
+
+
+
+- two negative : Clustering-Exposure_Balanced_Sampling_run2
 
 ## code
 - smolLM2-1.7B-lora-run3 (SFT): sft_smol.py

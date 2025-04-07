@@ -1,0 +1,7 @@
+[
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"Until July (Until Her, #1)\", \"Paper Princess (The Royals, #1)\", \"Marrying Winterborne (The Ravenels, #2)\", \"Stuck-Up Suit\", \"Everything for Her (For Her #1)\", \"Staking His Claim (Line of Duty, #5)\", \"Tapping the Billionaire (Billionaire Bad Boys, #1)\", \"One Good Earl Deserves a Lover (The Rules of Scoundrels, #2)\", \"Transcendence\", \"A Kiss at Midnight (Fairy Tales, #1)\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Last Thing He Needs (The Last Thing He Needs, #1)",
+    "ground_truth": "This Man Confessed (This Man, #3)"
+  }
+]

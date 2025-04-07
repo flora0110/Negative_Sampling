@@ -126,14 +126,14 @@ def generate_predictions_batch(model, tokenizer, dataset, trie, batch_size=8, ma
 
 if __name__ == "__main__":
     BASE_MODEL = "HuggingFaceTB/SmolLM2-1.7B-Instruct"
-    TUNED_MODEL = "Clustering-Exposure_Balanced_Sampling_run1/two_negatives"
-    method_name = "Clustering-Exposure_Balanced_Sampling_run2"
+    TUNED_MODEL = "SPRec_on_SFT-1"
+    method_name = "Constrained_Predict_Generate/SPRec"
     FINETUNED_PATH = f"/scratch/user/chuanhsin0110/test_0321/output/{TUNED_MODEL}/final_model"
     TEST_PATH = "/scratch/user/chuanhsin0110/test_0321/sampled_data/test_sample.json"
     output_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}"
     USE_LORA = True
     test_sample_size = 10
-    batch_size = 2
+    batch_size = 8
 
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL, padding_side="left")
     tokenizer.pad_token = tokenizer.eos_token
@@ -161,7 +161,7 @@ if __name__ == "__main__":
 
     predict_dir = os.path.join(output_dir, "predictions")
     os.makedirs(predict_dir, exist_ok=True)
-    raw_results_filename = f"raw_results_dpo_{test_sample_size}_{batch_size}.json" if USE_LORA else "raw_results_baseline.json"
+    raw_results_filename = f"raw_results_dpo_{test_sample_size}.json" if USE_LORA else "raw_results_baseline.json"
     raw_results_path = os.path.join(predict_dir, raw_results_filename)
 
     with open(raw_results_path, "w", encoding="utf-8") as f:

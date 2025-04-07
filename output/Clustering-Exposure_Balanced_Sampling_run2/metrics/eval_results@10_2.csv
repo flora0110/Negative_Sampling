@@ -1,0 +1,2 @@
+Dataset,Model,MGU@10,DGU@10,DivRatio@10,ORRatio@10,PredictNotInRatio@10
+Goodreads,Clustering-Exposure_Balanced_Sampling_run2,0.016838815148191386,0.07014675010805173,0.06382765531062125,0.06212424849699399,0.0
