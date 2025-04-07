@@ -72,7 +72,7 @@ HuggingFaceTB/SmolLM2-1.7B-Instruct
 ## result
 
 ### Direct Generate Baseline
-| Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | Predict_NotIn_Ratio ↓ |
+| Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | NotInRatio ↓ |
 |---------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:| :-------:|
 | origin model              | 0.0038   | 0.007  |   510     | 0.0511   | 0.0837 | 0.0179 | 0.1254  | 0.451 |
 | SFT-tuned                 | 0.0043   | 0.010  |   608     | 0.0609   | 0.0615 | 0.0163 | 0.0707  | 0.551 |
@@ -85,7 +85,7 @@ folders:
 
 ### Self-Play Baseline
 
-| Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | Predict_NotIn_Ratio ↓ |
+| Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | NotInRatio ↓ |
 |---------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|:-------:|
 | SPRec                                        | 0.0082   | 0.013  |   694     | 0.0695   | 0.0618 | 0.0153 | 0.0586  | 0.671 |
 | SPRec_wo_SFT(but DPO on SFT-tuned model)     | 0.0077   | 0.012  |   713     | 0.0714   | 0.0585 | 0.0148 | 0.0622  | 0.714 |
@@ -96,7 +96,7 @@ folders:
 
 ### Proposed Method: Clustering-Exposure Balanced Sampling
 
-| Model                                  | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | Predict_NotIn_Ratio ↓ |
+| Model                                  | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | NotInRatio ↓ |
 |----------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|:-------:|
 | ClusterIn-NegSampling                  | 0.0077   | 0.012  |    666    | 0.0667   | 0.0593 | 0.0149 | 0.0631  | 0.687 |
 | ClusterOut-LowExposure-NegSampling     | 0.0077   | 0.012  |    694    | 0.0695   | 0.0603 | 0.0155 | 0.0620  | 0.652 |
@@ -110,7 +110,7 @@ folders:
 
 ### Baseline on DPO w/o SFT-tuned
 
-| Model                         | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | Predict_NotIn_Ratio ↓ |
+| Model                         | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | NotInRatio ↓ |
 |-------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|:-------:|
 | SPRec_wo_STF                  | 0.0028   | 0.006  |   647     | 0.0648   | 0.0721 | 0.0165 | 0.0738  |
 | SPRec                         | 0.0032   | 0.007  |   608     | 0.0609   | 0.0797 | 0.0172 | 0.1004  | 0.542 |
@@ -120,10 +120,10 @@ folders:
 - SPRec: SPRec_run1
 
 ### Clustering-Exposure Balanced Sampling on DPO w/o SFT-tuned
-| Model                                            | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
-|--------------------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
-| ClusterIn-NegSampling                            | 0.0032   | 0.007  |    618    | 0.0619   | 0.0768 | 0.0167 | 0.0940  |
-| ClusterOut-LowExposure-NegSampling               | 0.0028   | 0.006  |    610    | 0.0611   | 0.0799 | 0.0172 | 0.1166  |
+| Model                                            | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | NotInRatio ↓ |
+|--------------------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|:-------:|
+| ClusterIn-NegSampling                            | 0.0032   | 0.007  |    618    | 0.0619   | 0.0768 | 0.0167 | 0.0940  | 562 |
+| ClusterOut-LowExposure-NegSampling               | 0.0028   | 0.006  |    610    | 0.0611   | 0.0799 | 0.0172 | 0.1166  | 0.47 |
 
 folders:
 - ClusterIn-NegSampling: Clustering-Exposure_Balanced_Sampling_run1/hard
