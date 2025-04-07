@@ -72,23 +72,23 @@ HuggingFaceTB/SmolLM2-1.7B-Instruct
 ## result
 
 ### Direct Generate Baseline
-| Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
-|---------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
-| origin model              | 0.0038   | 0.007  |   510     | 0.0511   | 0.0837 | 0.0179 | 0.1254  |
-| SFT-tuned                 | 0.0043   | 0.010  |   608     | 0.0609   | 0.0615 | 0.0163 | 0.0707  |
-| DPO-tuned w RN            | 0.0077   | 0.012  |   670     | 0.0671   | 0.0601 | 0.0161 | 0.0648  |
+| Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | Predict_NotIn_Ratio ↓ |
+|---------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:| :-------:|
+| origin model              | 0.0038   | 0.007  |   510     | 0.0511   | 0.0837 | 0.0179 | 0.1254  | 0.451 |
+| SFT-tuned                 | 0.0043   | 0.010  |   608     | 0.0609   | 0.0615 | 0.0163 | 0.0707  | 0.551 |
+| DPO-tuned w RN            | 0.0077   | 0.012  |   670     | 0.0671   | 0.0601 | 0.0161 | 0.0648  | 0.624 |
 
 folders:
-- origin model: 
+- origin model: molLM2-1.7B-Instruct
 - SFT-tuned: smolLM2-1.7B-lora-run3
 - DPO_RN_on_SFT-1: DPO_RN_on_SFT-1
 
 ### Self-Play Baseline
 
-| Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
-|---------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
-| SPRec                                        | 0.0082   | 0.013  |   694     | 0.0695   | 0.0618 | 0.0153 | 0.0586  |
-| SPRec_wo_SFT(but DPO on SFT-tuned model)     | 0.0077   | 0.012  |   713     | 0.0714   | 0.0585 | 0.0148 | 0.0622  |
+| Model                     | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | Predict_NotIn_Ratio ↓ |
+|---------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|:-------:|
+| SPRec                                        | 0.0082   | 0.013  |   694     | 0.0695   | 0.0618 | 0.0153 | 0.0586  | 0.671 |
+| SPRec_wo_SFT(but DPO on SFT-tuned model)     | 0.0077   | 0.012  |   713     | 0.0714   | 0.0585 | 0.0148 | 0.0622  | 0.714 |
 
 folders:
 - SPRec: output/SPRec_on_SFT-1
@@ -96,11 +96,11 @@ folders:
 
 ### Proposed Method: Clustering-Exposure Balanced Sampling
 
-| Model                                  | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
-|----------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
-| ClusterIn-NegSampling                  | 0.0077   | 0.012  |    666    | 0.0667   | 0.0593 | 0.0149 | 0.0631  |
-| ClusterOut-LowExposure-NegSampling     | 0.0077   | 0.012  |    694    | 0.0695   | 0.0603 | 0.0155 | 0.0620  |
-| Two negative                           | 0.0077   | 0.012  |    668    | 0.0669   | 0.0597 | 0.0148 | 0.0615  | 
+| Model                                  | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | Predict_NotIn_Ratio ↓ |
+|----------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|:-------:|
+| ClusterIn-NegSampling                  | 0.0077   | 0.012  |    666    | 0.0667   | 0.0593 | 0.0149 | 0.0631  | 0.687 |
+| ClusterOut-LowExposure-NegSampling     | 0.0077   | 0.012  |    694    | 0.0695   | 0.0603 | 0.0155 | 0.0620  | 0.652 |
+| Two negative                           | 0.0077   | 0.012  |    668    | 0.0669   | 0.0597 | 0.0148 | 0.0615  | 0.685 |
 
 folders:
 - [ClusterIn-NegSampling](./output/Clustering-Exposure_Balanced_Sampling_run1/hard-2) : output/Clustering-Exposure_Balanced_Sampling_run1/hard-2
@@ -110,10 +110,10 @@ folders:
 
 ### Baseline on DPO w/o SFT-tuned
 
-| Model                         | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ |
-|-------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|
+| Model                         | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | Predict_NotIn_Ratio ↓ |
+|-------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|:-------:|
 | SPRec_wo_STF                  | 0.0028   | 0.006  |   647     | 0.0648   | 0.0721 | 0.0165 | 0.0738  |
-| SPRec                         | 0.0032   | 0.007  |   608     | 0.0609   | 0.0797 | 0.0172 | 0.1004  |
+| SPRec                         | 0.0032   | 0.007  |   608     | 0.0609   | 0.0797 | 0.0172 | 0.1004  | 0.542 |
 
 folders:
 - SPRec_wo_STF: SPRec_wo_STF_run2
