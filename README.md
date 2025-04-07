@@ -122,7 +122,7 @@ folders:
 ### Clustering-Exposure Balanced Sampling on DPO w/o SFT-tuned
 | Model                                            | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | NotInRatio ↓ |
 |--------------------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|:-------:|
-| ClusterIn-NegSampling                            | 0.0032   | 0.007  |    618    | 0.0619   | 0.0768 | 0.0167 | 0.0940  | 562 |
+| ClusterIn-NegSampling                            | 0.0032   | 0.007  |    618    | 0.0619   | 0.0768 | 0.0167 | 0.0940  | 0.562 |
 | ClusterOut-LowExposure-NegSampling               | 0.0028   | 0.006  |    610    | 0.0611   | 0.0799 | 0.0172 | 0.1166  | 0.47 |
 
 folders:
