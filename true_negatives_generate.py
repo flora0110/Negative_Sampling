@@ -1,14 +1,9 @@
 """
-Clustering + Exposure Balanced Sampling Dataset Generator
+True Negative Sampling Dataset Generator
 
-1. 使用 topk 生成 Top-K Hard Negative candidates , 找同個cluster的
-2. Long-tail Negative 根據曝光度排序
-3. 若找不到 Hard Negative，再生一次
-4. 最後儲存四種 DPO 資料格式：
-    - dpo_hard.json
-    - dpo_long_tail.json
-    - dpo_two_negatives.json -> 做 S-DPO
-    - true_negative.json -> 新增 true negative 資料
+1. 計算input對應的interest_clusters
+2. 使用 beam search 生成 Top-K Hard Negative candidates
+3. 存起不是正確答案（output）的Negative candidates (True Negative)
 """
 
 import re
@@ -20,17 +15,19 @@ import torch
 from collections import Counter
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
+import difflib
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
+TEST = ""
+GENERATE_MODEL = "_Origin"
 # === Config ===
-method_name = "True_Negative_Sampling_run1"
+method_name = "True_Negative_Sampling_run2"
 BASE_MODEL = "HuggingFaceTB/SmolLM2-1.7B-Instruct"
 TUNED_MODEL = "smolLM2-1.7B-lora-run3"
 FINETUNED_PATH = f"/scratch/user/chuanhsin0110/test_0321/output/{TUNED_MODEL}/final_model"
-SAVE_PATH = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/data/"
+SAVE_PATH = f"/scratch/user/chuanhsin0110/test_0321/{TEST}output/{method_name}/data/"
 NAME2GENRE_PATH = "/scratch/user/chuanhsin0110/SPRec/eval/Goodreads/name2genre.json"
-USE_LORA = True  # 改成 False 就會用原始模型
+USE_LORA = False  # 改成 False 就會用原始模型
 BATCH_SIZE = 8
 
 # === Utils ===
@@ -53,8 +50,7 @@ def get_user_interest_cluster(input_text, name2genre, topk=3):
 
 def generate_candidates_beam_batch(model, tokenizer, prompts, max_new_tokens=100, num_return_sequences=3):
     """
-    修改後的 generate_candidates_topk_batch 使用 Beam Search
-    取出機率最大的前三個候選答案
+    使用 Beam Search 生成候選，取出機率最大的前三個候選答案
     """
     inputs = tokenizer(prompts, return_tensors="pt", padding=True).to(device)
     batch_size = len(prompts)
@@ -82,11 +78,22 @@ def generate_candidates_beam_batch(model, tokenizer, prompts, max_new_tokens=100
     return all_candidates
 
 def build_exposure_count(train_data):
+    from collections import Counter
+
+    # 統計每本書出現次數
     counter = Counter()
     for d in train_data:
         book_names = re.findall(r'"(.*?)"', d["input"])
         counter.update(book_names)
-    return counter
+
+    # 排序：曝光次數從高到低
+    sorted_books = counter.most_common()
+
+    # 建立曝光排名字典
+    exposure_rank = {book: rank + 1 for rank, (book, _) in enumerate(sorted_books)}
+
+    return counter, exposure_rank
+
 
 # === Main Process ===
 def process_data(train_path, valid_path, model, tokenizer, train_size=1024, valid_size=128):
@@ -98,17 +105,29 @@ def process_data(train_path, valid_path, model, tokenizer, train_size=1024, vali
     def load_and_sample(path, size):
         with open(path, "r") as f:
             data = json.load(f)
-        return random.sample(data, size)
+        # return random.sample(data, size)
+        return data[:size]
+
+    
+
+    # train_data = load_and_sample(train_path, 1024)
+    # # valid_data = load_and_sample(valid_path, 128)
 
     train_data = load_and_sample(train_path, train_size)
     valid_data = load_and_sample(valid_path, valid_size)
+    
+
+    exposure_count, exposure_rank = build_exposure_count(train_data)
+
+    
+
     full_data = train_data + valid_data
 
-    exposure_count = build_exposure_count(train_data)
-
     true_negative_data_details = []
-    # dpo_hard, dpo_long, dpo_two = [], [], []
     true_negative_data = []  # 用來存放 true negative 的 DPO 資料
+
+    # 用來統計有幾次 beam search 生成的 Top-K 候選中含有正確答案（output）
+    correct_in_beam_count = 0
 
     # === Batch Processing ===
     for i in tqdm(range(0, len(full_data), BATCH_SIZE), desc="Generating Negatives"):
@@ -116,79 +135,72 @@ def process_data(train_path, valid_path, model, tokenizer, train_size=1024, vali
         prompts = [prepare_prompt(d["instruction"], d["input"]) for d in batch]
         interest_clusters = [get_user_interest_cluster(d["input"], name2genre) for d in batch]
 
-        # === Dynamic Sampling for Hard & Long-tail Negatives ===
-        batch_candidates = [[] for _ in range(len(batch))]
-        # hard_negs = [None] * len(batch)
-        # retry_counts = [0] * len(batch)
-        num_seq = 3  # 這裡改成 3 (beam search候選數)
-
-        # # 使用 beam search 生成候選，直到每個樣本都有 hard negative
-        # while any(h is None for h in hard_negs):
-        #     new_candidates = generate_candidates_beam_batch(model, tokenizer, prompts, num_return_sequences=num_seq)
-        #     for idx, candidates in enumerate(new_candidates):
-        #         batch_candidates[idx].extend(candidates)
-        #         if hard_negs[idx] is None:
-        #             for c in candidates:
-        #                 genres = name2genre.get(c.strip("\" \n"), [])
-        #                 if any(g in interest_clusters[idx] for g in genres):
-        #                     hard_negs[idx] = c
-        #                     break
-        #             if hard_negs[idx] is None and len(batch_candidates[idx]) >= 40:
-        #                 hard_negs[idx] = random.choice(batch_candidates[idx])
-        #                 retry_counts[idx] += 1
-
-        # === 選擇 Long-tail Negative 以及組建 balanced_data 與 DPO 資料 ===
-        # for d, prompt, interest_cluster, candidates, hard_neg, rn_count in zip(batch, prompts, interest_clusters, batch_candidates, hard_negs, retry_counts):
-        #     long_tail_candidates = [c for c in candidates if not any(g in interest_cluster for g in name2genre.get(c.strip("\" \n"), []))]
-        #     if long_tail_candidates:
-        #         long_tail_candidates.sort(key=lambda x: exposure_count.get(x.strip("\" \n"), 0))
-        #         long_tail_neg = long_tail_candidates[0]
-        #     else:
-        #         long_tail_neg = random.choice(candidates)
-
-        #     # 先建立 balanced_data 的基本資料，不含 true_negative
-        #     balanced_data.append({
-        #         "instruction": d["instruction"],
-        #         "input": d["input"],
-        #         "output": d["output"].strip(),
-        #         "hard_negatives": hard_neg,
-        #         "long_tail_negatives": long_tail_neg
-        #     })
-
-        #     dpo_hard.append({
-        #         "prompt": prompt,
-        #         "chosen": d["output"].strip(),
-        #         "rejected": hard_neg
-        #     })
-        #     dpo_long.append({
-        #         "prompt": prompt,
-        #         "chosen": d["output"].strip(),
-        #         "rejected": long_tail_neg
-        #     })
-        #     dpo_two.append({
-        #         "prompt": prompt,
-        #         "chosen": d["output"].strip(),
-        #         "rejected": [hard_neg, long_tail_neg]
-        #     })
-
         # === 使用 Beam Search 生成 True Negative 候選 ===
-        # 對整個 batch 的 prompt 再跑一次 beam search，取出前三個候選
-        beam_candidates = generate_candidates_topk_batch(model, tokenizer, prompts, num_return_sequences=3)
+        beam_candidates = generate_candidates_beam_batch(model, tokenizer, prompts, num_return_sequences=10)
+        #print(f"\n\n####  beam_candidates:{beam_candidates}")
         for idx, (d, prompt) in enumerate(zip(batch, prompts)):
+            # print(f"\n\nprompt: {prompt}")
+            # print(f"\ninterest_clusters: {list(interest_clusters[idx])}")
             true_negatives = []
+            # 檢查 beam 候選中是否含有正確答案，若有則統計一次（每個樣本只計算一次）
+            if any(cand.strip() == d["output"].strip() for cand in beam_candidates[idx]):
+                correct_in_beam_count += 1
+            print("\n\nbeam_candidates:")
             for cand in beam_candidates[idx]:
+                print(cand)
                 # 如果候選答案不等於正確答案，則加入 true_negative
                 if cand.strip() != d["output"].strip():
                     true_negatives.append(cand)
-            # 更新剛剛加入 balanced_data 中的對應資料 (全局索引為 i + idx)
-            # balanced_data[i + idx]["true_negative"] = true_negatives
+            print("\ntrue_negative 候選的 genre:")
+            # 計算每個 true_negative 候選的 genre
+            neg_genra = []
+            for cand in true_negatives:
+                candidate_name = cand.strip("\" \n")
+                genres = name2genre.get(candidate_name, None)
+                exposure = exposure_count.get(candidate_name, 0)
+                rank = exposure_rank.get(candidate_name, None)
+
+                if genres is None:
+                    # 找最相近的書名
+                    closest = difflib.get_close_matches(candidate_name, name2genre.keys(), n=1, cutoff=0.6)
+                    if closest:
+                        matched_name = closest[0]
+                        genres = name2genre[matched_name]
+                        exposure = exposure_count.get(matched_name, 0)
+                        rank = exposure_rank.get(matched_name, None)
+                        print(f"Candidate not found: {candidate_name} → using closest match: {matched_name}")
+                        neg_genra.append({
+                            "candidate": f"**{cand.strip()} -> {matched_name}",
+                            "genre": genres,
+                            "exposure_count": exposure,
+                            "exposure_rank": rank
+                        })
+                    else:
+                        print(f"Candidate not found and no close match: {candidate_name}")
+                        neg_genra.append({
+                            "candidate": f"**{cand.strip()} -> NO_MATCH",
+                            "genre": [],
+                            "exposure_count": 0,
+                            "exposure_rank": None
+                        })
+                else:
+                    neg_genra.append({
+                        "candidate": cand.strip(),
+                        "genre": genres,
+                        "exposure_count": exposure,
+                        "exposure_rank": rank
+                    })
+
+
+
             true_negative_data_details.append({
                 "instruction": d["instruction"],
                 "input": d["input"],
                 "output": d["output"].strip(),
-                "interest_clusters": interest_clusters,
+                "interest_clusters": list(interest_clusters[idx]),
                 "true_negative": true_negatives,
-                "neg_genra": , # 每個true_negative對應的genra
+                "neg_genra": neg_genra,
+                "beam_candidates": beam_candidates[idx]
             })
             # 建立 true_negative_data 的項目
             true_negative_data.append({
@@ -198,23 +210,11 @@ def process_data(train_path, valid_path, model, tokenizer, train_size=1024, vali
             })
 
     # === Save Files ===
-    with open(os.path.join(SAVE_PATH, "true_negative_data_details.json"), "w") as f:
-        json.dump(true_negative_data_details, f, indent=2)
+    with open(os.path.join(SAVE_PATH, f"true_negative_data_details{GENERATE_MODEL}.json"), "w", encoding="utf-8") as f:
+        json.dump(true_negative_data_details, f, indent=2, ensure_ascii=False)
 
-    # balanced_train = balanced_data[:train_size]
-    # balanced_valid = balanced_data[train_size:]
-    # with open(os.path.join(SAVE_PATH, "balanced_train.json"), "w", encoding="utf-8") as f:
-    #     json.dump(balanced_train, f, indent=2, ensure_ascii=False)
-    # with open(os.path.join(SAVE_PATH, "balanced_valid.json"), "w", encoding="utf-8") as f:
-    #     json.dump(balanced_valid, f, indent=2, ensure_ascii=False)
-
-    print(f"\nBalanced Data Train/Valid split saved to {SAVE_PATH}")
-
-    # DPO Data
-    # Split DPO Data
     true_negative_data_train = true_negative_data[:train_size]
     true_negative_data_valid = true_negative_data[train_size:]
-
 
     with open(os.path.join(SAVE_PATH, "true_negative_data_train.json"), "w", encoding="utf-8") as f:
         json.dump(true_negative_data_train, f, indent=2, ensure_ascii=False)
@@ -222,13 +222,14 @@ def process_data(train_path, valid_path, model, tokenizer, train_size=1024, vali
         json.dump(true_negative_data_valid, f, indent=2, ensure_ascii=False)
 
     print(f"\nAll datasets saved to {SAVE_PATH}")
+    print(f"Beam search generated Top-K candidates containing correct answer: {correct_in_beam_count} times")
 
 if __name__ == "__main__":
 
     # ============ Output dir check ============
     if os.path.exists(SAVE_PATH):
         print(f"Warning: Output dir '{SAVE_PATH}' already exists. It may overwrite previous models.")
-        exit(1)
+        #exit(1)
     else:
         os.makedirs(SAVE_PATH, exist_ok=True)
         print(f"Created output dir: {SAVE_PATH}")
@@ -247,5 +248,5 @@ if __name__ == "__main__":
         train_path="/scratch/user/chuanhsin0110/test_0321/sampled_data/train_sample.json",
         valid_path="/scratch/user/chuanhsin0110/test_0321/sampled_data/valid_sample.json",
         model=model.module,
-        tokenizer=tokenizer,
+        tokenizer=tokenizer,train_size=10,valid_size=5,
     )
