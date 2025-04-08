@@ -96,16 +96,25 @@ folders:
 
 ### Proposed Method: Clustering-Exposure Balanced Sampling
 
-| Model                                  | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | NotInRatio ↓ |
-|----------------------------------------|:--------:|:------:|:---------:|:--------:|:-----:|:-----:|:-------:|:-------:|
-| ClusterIn-NegSampling                  | 0.0077   | 0.012  |    666    | 0.0667   | 0.0593 | 0.0149 | 0.0631  | 0.687 |
-| ClusterOut-LowExposure-NegSampling     | 0.0077   | 0.012  |    694    | 0.0695   | 0.0603 | 0.0155 | 0.0620  | 0.652 |
-| Two negative                           | 0.0077   | 0.012  |    668    | 0.0669   | 0.0597 | 0.0148 | 0.0615  | 0.685 |
+| Model                              | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
+|------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
+| ClusterIn-NegSampling              | 0.0077    | 0.012   | 666         | 0.0667     | 0.0593  | 0.0149  | 0.0631    | 0.687        |
+| ClusterOut-LowExposure-NegSampling| 0.0077    | 0.012   | 694         | 0.0695     | 0.0603  | 0.0155  | 0.0620    | 0.652        |
+| Two negative                       | 0.0077    | 0.012   | 668         | 0.0669     | 0.0597  | 0.0148  | 0.0615    | 0.685        |
+| Beam w/o Diversity                          | 0.0086| 0.017| 825     | 0.0827 | 0.0399 | 0.0125 | 0.0742 | 0.754    |
+| Beam w Diversity        | 0.0096    | 0.018   | 849         | 0.0851     | 0.0403  | 0.0121  | 0.0732    | 0.787        |
+
+| Beam w/o Diversity - two_stage on two neg      | 0.0101    | 0.017   | 851         | 0.0853     | 0.0398  | 0.0114  | 0.0755    | 0.837        |
+
+
 
 folders:
 - [ClusterIn-NegSampling](./output/Clustering-Exposure_Balanced_Sampling_run1/hard-2) : output/Clustering-Exposure_Balanced_Sampling_run1/hard-2
 - [ClusterOut-LowExposure-NegSampling](./output/Clustering-Exposure_Balanced_Sampling_run1/long_tail-2): output/Clustering-Exposure_Balanced_Sampling_run1/long_tail-2
 - [Two negative](./output/Clustering-Exposure_Balanced_Sampling_run1/two_negatives): output/Clustering-Exposure_Balanced_Sampling_run1/two_negatives
+- Beam w/o Diversity: output/Beam_Search_Negative_Generate/No_Div
+- Beam w Diversity : output/Beam_Search_Negative_Generate/Div2
+- Beam w/o Diversity - two_stage on two neg : Beam_Search_Negative_Generate/Div_on_two_neg
 
 
 ### Baseline on DPO w/o SFT-tuned
@@ -134,12 +143,12 @@ folders:
 ### Clustering-Exposure_Balanced_Sampling
 | Model                                          | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 |------------------------------------------------|-----------|---------|-------------|------------|---------|---------|-----------|--------------|
-| Clustering-Exposure_Balanced_Sampling_run2     | 0.0086    | 0.0150  | 637.0000    | 0.0638     | 0.0701  | 0.0168  | 0.0621    | 0.0000       |
-| Constrained_Predict_Generate/SPRec             | 0.0086    | 0.0150  | 649.0000    | 0.0650     | 0.0715  | 0.0173  | 0.0611    | 0.0000       |
-
+|   two negative  | 0.0086    | 0.015  | 637   | 0.0638     | 0.0701  | 0.0168  | 0.0621    | 0       |
+| SPRec             | 0.0086    | 0.015  | 649    | 0.0650     | 0.0715  | 0.0173  | 0.0611    | 0      |
 
 
 - two negative : Clustering-Exposure_Balanced_Sampling_run2
+- SPRec : Constrained_Predict_Generate/SPRec
 
 ## code
 - smolLM2-1.7B-lora-run3 (SFT): sft_smol.py
