@@ -101,12 +101,16 @@ folders:
 | ClusterIn-NegSampling              | 0.0077    | 0.012   | 666         | 0.0667     | 0.0593  | 0.0149  | 0.0631    | 0.687        |
 | ClusterOut-LowExposure-NegSampling| 0.0077    | 0.012   | 694         | 0.0695     | 0.0603  | 0.0155  | 0.0620    | 0.652        |
 | Two negative                       | 0.0077    | 0.012   | 668         | 0.0669     | 0.0597  | 0.0148  | 0.0615    | 0.685        |
+
+### Proposed Method: Beam - based
+| Model                              | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 | Beam w/o Diversity                          | 0.0086| 0.017| 825     | 0.0827 | 0.0399 | 0.0125 | 0.0742 | 0.754    |
 | Beam w Diversity        | 0.0096    | 0.018   | 849         | 0.0851     | 0.0403  | 0.0121  | 0.0732    | 0.787        |
 | Beam w/o Diversity - two_stage on two neg      | 0.0101    | 0.017   | 851         | 0.0853     | 0.0398  | 0.0114  | 0.0755    | 0.837        |
 | Beam w Diversity - two_stage on two neg | 0.0101 | 0.017 | 891         | 0.0893     | 0.0406  | 0.0115  | 0.0876    | 0.872        |
-
-
+| Beam_Search_Negative_Generate_CD/Div_on_SFT_tuned_p_2.0 | 0.0157    | 0.026   | 1032        | 0.1034     | 0.0425  | 0.0123  | 0.0887    | 0.863        |
+| Beam_Search_Negative_Generate_CD/Div_on_SFT_tuned_p_1.0 | 0.0134    | 0.022   | 974         | 0.0976     | 0.0431  | 0.0126  | 0.0928    | 0.854        |
+| Beam_Search_Negative_Generate_CD/Div_on_SFT_tuned_p_0.5 | 0.0128    | 0.022   | 971         | 0.0973     | 0.0429  | 0.0124  | 0.0909    | 0.839        |
 
 
 folders:

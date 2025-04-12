@@ -1,0 +1,2 @@
+Dataset,Model,MGU@10,DGU@10,DivRatio@10,ORRatio@10,PredictNotInRatio@10
+Goodreads,Beam_Search_Negative_Generate_CD/Div_on_SFT_tuned_p_0.5,0.012351117024167912,0.04294297081908208,0.09729458917835672,0.09088176352705411,0.839
