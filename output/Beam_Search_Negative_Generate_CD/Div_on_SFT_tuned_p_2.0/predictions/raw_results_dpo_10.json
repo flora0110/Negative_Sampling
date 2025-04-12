@@ -1,0 +1,52 @@
+[
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"Until July (Until Her, #1)\", \"Paper Princess (The Royals, #1)\", \"Marrying Winterborne (The Ravenels, #2)\", \"Stuck-Up Suit\", \"Everything for Her (For Her #1)\", \"Staking His Claim (Line of Duty, #5)\", \"Tapping the Billionaire (Billionaire Bad Boys, #1)\", \"One Good Earl Deserves a Lover (The Rules of Scoundrels, #2)\", \"Transcendence\", \"A Kiss at Midnight (Fairy Tales, #1)\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Last Duchess (The Last Duchess, #1)\"</s>",
+    "ground_truth": "This Man Confessed (This Man, #3)"
+  },
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"Clockwork Prince (The Infernal Devices, #2)\", \"Be with Me (Wait for You, #2)\", \"Clockwork Princess (The Infernal Devices, #3)\", \"The Book of Ivy (The Book of Ivy, #1)\", \"In The Afterlight (The Darkest Minds, #3)\", \"Rebel Spring (Falling Kingdoms, #2)\", \"Snow Like Ashes (Snow Like Ashes, #1)\", \"Frozen Tides (Falling Kingdoms, #4)\", \"Better off Friends\", \"Alice in Zombieland (White Rabbit Chronicles, #1)\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Last Memory (The Last Memory, #1)\"</s>\n\na.",
+    "ground_truth": "Princess of Thorns"
+  },
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"Carry On\", \"The Midnight Star (The Young Elites, #3)\", \"And I Darken (The Conqueror's Saga, #1)\", \"Rebel of the Sands (Rebel of the Sands, #1)\", \"A Shadow Bright and Burning (Kingdom on Fire, #1)\", \"Traitor to the Throne (Rebel of the Sands #2)\", \"The Queen of the Tearling (The Queen of the Tearling, #1)\", \"Let's Get Lost\", \"Queen of Shadows (Throne of Glass, #4)\", \"Illuminae (The Illuminae Files, #1)\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Last Kingdom (The Saxon Stories, #1)\"</s>\n\na:",
+    "ground_truth": "Gemina (The Illuminae Files, #2)"
+  },
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"The Deal (Off-Campus, #1)\", \"The Score (Off-Campus, #3)\", \"Damnable Grace (Hades Hangmen, #5)\", \"Be My Hero (Forbidden Men, #3)\", \"A Perfect Ten (Forbidden Men, #5)\", \"Worth It (Forbidden Men, #6)\", \"Truth or Beard (Winston Brothers, #1)\", \"Wicked Fall (The Wicked Horse, #1)\", \"Castle Hill (On Dublin Street, #3.5)\", \"After We Fall\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Last Time (The Last Time, #1)\"</s>\n\n---\nThe user has played the following books before: \"The Last Time (The Last Time, #1)\", \"The Last Time (The Last Time,",
+    "ground_truth": "Playboy Pilot"
+  },
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"All Fall Down (Embassy Row, #1)\", \"An Ember in the Ashes (An Ember in the Ashes, #1)\", \"Percy Jackson's Greek Heroes\", \"The Archived (The Archived, #1)\", \"The Rose Society (The Young Elites, #2)\", \"The Raven Boys (The Raven Cycle, #1)\", \"The Winner's Kiss (The Winner's Trilogy, #3)\", \"Furthermore\", \"Lady Midnight (The Dark Artifices, #1)\", \"Ignite Me (Shatter Me, #3)\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Lost Girls (The Lost Girls, #1)\"</s>\n\na:",
+    "ground_truth": "The Unbound (The Archived, #2)"
+  },
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"Harry Potter and the Prisoner of Azkaban (Harry Potter, #3)\", \"The Way of Kings (The Stormlight Archive, #1)\", \"Harry Potter and the Goblet of Fire (Harry Potter, #4)\", \"The Archived (The Archived, #1)\", \"Every Heart a Doorway (Wayward Children, #1)\", \"We Are the Ants\", \"Our Dark Duet (Monsters of Verity, #2)\", \"Words of Radiance (The Stormlight Archive, #2)\", \"Saga, Vol. 1 (Saga, #1)\", \"The Language of Thorns: Midnight Tales and Dangerous Magic\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Last Memory (The Last Memory, #1)\"</s>\n\na.",
+    "ground_truth": "Horrorstör"
+  },
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"Obsidian (Lux, #1)\", \"Onyx (Lux, #2)\", \"Opal (Lux, #3)\", \"Origin (Lux, #4)\", \"Shadows (Lux, #0.5)\", \"A Court of Mist and Fury (A Court of Thorns and Roses, #2)\", \"A Court of Wings and Ruin (A Court of Thorns and Roses, #3)\", \"Opposition (Lux, #5)\", \"The Wrath and the Dawn (The Wrath and the Dawn, #1)\", \"Empire of Storms (Throne of Glass, #5)\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Shadow and the Star (The Shadow and the Star, #1)\"</s>\n\na.",
+    "ground_truth": "Sinner (The Wolves of Mercy Falls, #4)"
+  },
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"The Winter King (Weathermages of Mystral, #1)\", \"MacRieve (Immortals After Dark, #14)\", \"Midnight Soul (Fantasyland, #5)\", \"The Immortal Highlander (Highlander, #6)\", \"True (New Species, #11)\", \"Nero (Made Men, #1)\", \"Leo\", \"Fallen Crest Family (Fallen Crest High, #2)\", \"Fallen Crest Public (Fallen Crest High, #3)\", \"The Boy Who Sneaks in My Bedroom Window\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Boy Who Sneaks in My Bedroom Window (The Boy Who Sneaks in My Bedroom Window, #1)\"</s>\n\na)",
+    "ground_truth": "Once Burned (Night Prince, #1)"
+  },
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"Everything Leads to You\", \"Geekerella\", \"Milk and Honey\", \"Timekeeper (Timekeeper, #1)\", \"The Dark Prophecy (The Trials of Apollo, #2)\", \"Lord of Shadows (The Dark Artifices, #2)\", \"Wonder Woman: Warbringer (DC Icons, #1)\", \"The Inexplicable Logic of My Life\", \"The Gentleman's Guide to Vice and Virtue\", \"The Sky Is Everywhere\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Girl from Widow Hills\"</s>",
+    "ground_truth": "The Throne of Fire (Kane Chronicles, #2)"
+  },
+  {
+    "prompt": "### Instruction:\nGiven a list of books the user recently enjoys, please recommend a new books that the user may like\n\n### Input:\nThe user has played the following books before: \"Lover Awakened (Black Dagger Brotherhood, #3)\", \"Lover Revealed (Black Dagger Brotherhood, #4)\", \"Lover Unbound (Black Dagger Brotherhood, #5)\", \"Lover Avenged (Black Dagger Brotherhood, #7)\", \"Lover Mine (Black Dagger Brotherhood, #8)\", \"Lover Unleashed (Black Dagger Brotherhood, #9)\", \"Lover Reborn (Black Dagger Brotherhood, #10)\", \"The King (Black Dagger Brotherhood, #12)\", \"The Shadows (Black Dagger Brotherhood, #13)\", \"Sugar Baby Beautiful\", please write a new books that the user may bought\n\n### Response:",
+    "prediction": "\"The Lover's Lament (Black Dagger Brotherhood, #11)\"</s>\n\nHow can the AI improve this?",
+    "ground_truth": "Black Rainbow (Rainbows, #1)"
+  }
+]
