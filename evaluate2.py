@@ -112,33 +112,30 @@ if __name__ == "__main__":
     # model_name = "smolLM2-1.7B-lora-dpo-run6"
     # model_name = "smolLM2-1.7B-lora-run6"
     # model_name = "molLM2-1.7B-Instruct"
-    method_name = "SPRec_run1"
-
-    #file_name = "raw_results_lora"
-    file_name = "raw_results_dpo_1000"
-    #file_name = "raw_results_baseline"
-
-    sample_method = ""
-
-    # input_dir = "./results/eval_lora_raw_results.json"
-    # input_dir = "./results/eval_baseline_raw_results.json"
-    # input_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/{sample_method}/predictions/{file_name}.json"
-    input_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/predictions/{file_name}.json"
+    D = "Div"
+    num_return_sequences = "10"      # 請依實際情況替換
+    diversity_penalty = "2.0"   # 請依實際情況替換
     
-    # exp_csv = "./STF_eval_metrics.csv"
-    # output_dir = "./STF_eval_output.json"
-    # exp_csv = "./origin_eval_metrics.csv"
-    # output_dir = "./origin_eval_output.json"
+    method_name = "Beam_Search_Negative_Generate_CD"
+    
+    # sample_method = "neg_sampling_clustering_exposure_balanced"
+    # sample_method = "neg_sampling_balanced_popularity"
+    # sample_method = "neg_sampling_clusterin_high_exposure"
+    sample_method = "neg_sampling_clusterout_low_exposure"
+    output_path = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/{D}_{num_return_sequences}_{diversity_penalty}/{sample_method}"
+
+
+    file_name = "raw_results_dpo_1000"
+    input_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/{D}_{num_return_sequences}_{diversity_penalty}/{sample_method}/predictions/{file_name}.json"
+    # input_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/predictions/{file_name}.json"
+    
     topk = 10
 
-    # exp_csv = f"/scratch/user/chuanhsin0110/test_0321/output/{model_name}/{sample_method}/metrics/eval_results@{topk}.csv"
-    # output_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{model_name}/{sample_method}/metrics/eval_results@{topk}.json"
+    
+    exp_csv = f"{output_path}/metrics/eval_results@{topk}_2.csv"
+    output_dir = f"{output_path}/metrics/eval_results@{topk}_2.json"
 
-    # os.makedirs(f"/scratch/user/chuanhsin0110/test_0321/output/{model_name}/{sample_method}/metrics", exist_ok=True)
-    exp_csv = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/metrics/eval_results@{topk}_2.csv"
-    output_dir = f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/metrics/eval_results@{topk}_2.json"
-
-    os.makedirs(f"/scratch/user/chuanhsin0110/test_0321/output/{method_name}/metrics", exist_ok=True)
+    os.makedirs(f"{output_path}/metrics", exist_ok=True)
     category = "Goodreads"
 
     with open(input_dir, "r") as f:
@@ -281,7 +278,8 @@ if __name__ == "__main__":
 
     # 將預測結果不在 name2genre 中的比例加入評估結果
     eval_dic = {}
-    eval_dic["model"] = method_name
+    eval_dic["method_name"] = method_name
+    eval_dic["sample_method"] = sample_method
     eval_dic["Dis_genre"] = dis_abs_genre
     eval_dic['NDCG'] = NDCG
     eval_dic["HR"] = HR

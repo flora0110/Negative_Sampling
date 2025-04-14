@@ -123,6 +123,14 @@ folders:
 - Beam w/o Diversity - two_stage on two neg : Beam_Search_Negative_Generate/Div_on_two_neg2
 - Beam w Diversity - two_stage on two neg: Beam_Search_Negative_Generate/No_Div_on_two_neg2
 
+# Proposed Method: Beam-based Clustering-Exposure Balanced Sampling
+| Model                              | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
+|------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
+| neg_sampling_balanced_popularity   | 0.012889980087473501 |  0.023  |     906     | 0.0907815631262525 | 0.04099795695406755 | 0.011888792452729292 | 0.06853707414829659 |    0.797     |
+| neg_sampling_clusterin_high_exposure | 0.014408167871532953 |  0.024  |     955     | 0.09569138276553106 | 0.0396697215046527 | 0.011980170870633607 | 0.09278557114228457 |    0.855     |
+| neg_sampling_clusterout_low_exposure | 0.015800864510980034 |  0.029  |     977     | 0.09789579158316633 | 0.05101134037339361 | 0.013454019520756186 | 0.06703406813627255 |    0.787     |
+| neg_sampling_clustering_exposure_balanced | 0.012388696896311457 |  0.022  |     907     | 0.09088176352705411 | 0.042384285147291395 | 0.011879364026443684 | 0.06723446893787575 |    0.813     |
+
 
 ### Baseline on DPO w/o SFT-tuned
 
@@ -164,6 +172,8 @@ folders:
 - SPRec_wo_STF_run2  : dataset_generate.py $\rightarrow$ DPO_from_dpoData.py
 - SPRec_run1 (SFT+DPO)  : dataset_generate.py (with smolLM2-1.7B-lora-run3 model) $\rightarrow$ DPO_from_dpoData.py
 - Clustering-Exposure Balanced Sampling: dataset_generate_cluster_batch.py $\rightarrow$ DPO_from_dpoData.py $\rightarrow$ generate_predict_batch.py
+- beam-based: 
+  - beam_negative_generate_CD.py $\rightarrow$ add_details.py $\rightarrow$ neg_sampling_generator_from_details_data.py $\rightarrow$ S-DPO.py/DPO_on_SFT.py
 
 ## neg data
 - sample 1024 train & valid data: sampled_data/
