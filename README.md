@@ -124,6 +124,7 @@ folders:
 - Beam w Diversity - two_stage on two neg: Beam_Search_Negative_Generate/No_Div_on_two_neg2
 
 ### Proposed Method: Beam-based Clustering-Exposure Balanced Sampling
+#### p = 2.0
 | Model                              | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 |------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
 | neg_sampling_balanced_popularity   |  0.0129   |  0.023  |     906     |   0.0908   |  0.041  | 0.0119  |  0.0685   |    0.797     |
@@ -132,6 +133,13 @@ folders:
 | neg_sampling_clustering_exposure_balanced |  0.0124   |  0.022  |     907     |   0.0909   | 0.0424  | 0.0119  |  0.0672   |    0.813     |84285147291395 | 0.011879364026443684 | 0.06723446893787575 |    0.813     |
 
 
+#### p = 1.0
+| Model                              | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
+|------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
+| neg_sampling_balanced_popularity   |  0.0123   |  0.021  |     909     |   0.0911   | 0.0398  |  0.012  |  0.0698   |    0.793     |
+| neg_sampling_clusterin_high_exposure |  0.0133   |  0.022  |     915     |   0.0917   | 0.0407  | 0.0124  |   0.098   |    0.853     |
+| neg_sampling_clusterout_low_exposure |  0.0187   |  0.032  |    1005     |   0.1007   | 0.0481  |  0.013  |  0.0709   |    0.796     |
+| neg_sampling_clustering_exposure_balanced |  0.0121   |  0.021  |     914     |   0.0916   |  0.041  | 0.0118  |  0.0692   |    0.809     |
 ### Baseline on DPO w/o SFT-tuned
 
 | Model                         | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | NotInRatio ↓ |
