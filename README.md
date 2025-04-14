@@ -123,7 +123,7 @@ folders:
 - Beam w/o Diversity - two_stage on two neg : Beam_Search_Negative_Generate/Div_on_two_neg2
 - Beam w Diversity - two_stage on two neg: Beam_Search_Negative_Generate/No_Div_on_two_neg2
 
-# Proposed Method: Beam-based Clustering-Exposure Balanced Sampling
+### Proposed Method: Beam-based Clustering-Exposure Balanced Sampling
 | Model                              | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 |------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
 | neg_sampling_balanced_popularity   |  0.0129   |  0.023  |     906     |   0.0908   |  0.041  | 0.0119  |  0.0685   |    0.797     |
