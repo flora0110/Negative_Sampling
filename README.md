@@ -14,7 +14,18 @@
 | Model         | NDCG@5 ↑ | HR@5 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 |------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
 | SPRec      |  0.0066   |  0.008  |     447     |   0.0896   | 0.0758  | 0.0203  |  0.0912   |    0.671     |
-| Our Method|  0.0235   |  0.036   |     837     |   0.1677    |  0.041    | 0.0103  |  0.1076   |    0.902     |
+| Our Method |  0.0235   |  0.036   |     837     |   0.1677    |  0.041    | 0.0103  |  0.1076   |    0.902     |
+
+
+- Our Method:
+  1. 使用SFT(只有正樣本)微調LLM(HuggingFaceTB/SmolLM2-1.7B-Instruct) 得到SFT-tuned LLM
+  2. 使用SFT-tuned LLM 做 Beam search 加 Constrained Decoding 得到十個negative sample candidates
+  3. 由使用者過去購買的物品建立使用者興趣集群（genras）
+  4. 找出 不 在使用者興趣集群中的candidates中曝光度最低的作為clusterout_low_exposure neg_sample
+  5. 找出在使用者興趣集群中的candidates中曝光度最低的作為clusterin_low_exposure neg_sample
+  6. 使用clusterout_low_exposure neg_sample 對 SFT-tuned LLM 做 DPO, 得到 DPO-SFT-tuned LLM
+  7. 使用clusterin_low_exposure neg_sample 對 DPO-SFT-tuned LLM 做 DPO, 得到最終模型
+
 
 3. What did you discover or show through your project? You should tell us something interesting as a final takeaway.
 -  因為計算指標的方式是將預測的結果去和資料庫中所有產品名稱計算相似度得到到的前topk個當作推薦結果（排序），所以NotInRatio雖然變高（LLM直接生成的產品不在dataset中），準確率還是可以提高
