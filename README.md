@@ -9,7 +9,7 @@
 2. What is your key insight? You should convey some "special sauce" that tells the audience what is so neat about your approach.
 - 為了提升準確性，我們想要挑選到true negative sample，而因為原本長尾產品就已經很少出現在正樣本中，為了讓模型有機會學習到長尾產品的知識，我們也想要挑選曝光度較低的產品作為negative sample
 - 同時因為我們想使用self play的方式，通過自我對弈來抑制模型對熱門或同質性項目的偏好，因此模型對於生成candidates的信心、生成candidates是否真的存在在資料庫中，也會影響結果
-- 因此我們會使用Beam search加Constrained Decoding去生成負樣本 candidates，再和使用者的興趣集群做比較，並考慮產品曝光度去選擇負樣本，目前我們的方法，在和我們作為參考的論文方法（SPRec）在同樣使用小型模型進行微調後的結果，在NDCG@5、HR@5 、Diversity、DGU、MGU指標上都大幅進步至少一倍
+- 因此我們會使用Beam search加Constrained Decoding去生成負樣本 candidates，再和使用者的興趣集群做比較，並考慮產品曝光度去選擇負樣本，目前我們的方法，在和我們作為參考的論文方法（SPRec）在同樣使用小型模型(HuggingFaceTB/SmolLM2-1.7B-Instruct)進行微調後的結果，在NDCG@5、HR@5 、Diversity、DGU、MGU指標上都大幅進步至少一倍
 
 | Model         | NDCG@5 ↑ | HR@5 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 |------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
@@ -26,7 +26,7 @@
 | S-DPO |  0.0108   |  0.017  |     582     |   0.1166   | 0.0569  | 0.0165  |   0.114   |    0.809     |
 | curriculum learning |  0.0189   |  0.025  |     782     |   0.1567   |  0.04   | 0.0101  |  0.1461   |    0.943     |
 
-- 比起使用topK生成candidates, 使用beam生成candidates因為是模型有信心的答案，所以在抑制模型對熱門或同質性項目的偏好效果上更好，同時因為對模型來說也是比較困難的負樣本，因此也學習到比較細緻的分類方式，因此準確率上也有提升
+- 比起使用topK生成candidates, 使用beam search生成candidates因為是模型有信心的答案，所以在抑制模型對熱門或同質性項目的偏好效果上更好，同時因為對模型來說也是比較困難的負樣本，因此也學習到比較細緻的分類方式，因此準確率上也有提升
 
 | Model      | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 |------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
