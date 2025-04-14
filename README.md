@@ -90,6 +90,11 @@ folders:
 | SPRec                                        | 0.0082   | 0.013  |   694     | 0.0695   | 0.0618 | 0.0153 | 0.0586  | 0.671 |
 | SPRec_wo_SFT(but DPO on SFT-tuned model)     | 0.0077   | 0.012  |   713     | 0.0714   | 0.0585 | 0.0148 | 0.0622  | 0.714 |
 
+| Model                              | NDCG@5 ↑ | HR@5 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
+|------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
+| neg_sampling_low_exposure          |  0.0066   |  0.008  |     447     |   0.0896   | 0.0758  | 0.0203  |  0.0912   |    0.671     |
+| neg_sampling_low_exposure          |  0.0061   |  0.007  |     460     |   0.0922   | 0.0725  | 0.0198  |  0.0884   |    0.714     |
+
 folders:
 - SPRec: output/SPRec_on_SFT-1
 - SPRec_wo_SFT: output/SPRec_wo_SFT_DPO_on_SFT-1
@@ -136,24 +141,29 @@ folders:
 #### p = 1.0
 | Model                              | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 |------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
-| neg_sampling_balanced_popularity   |  0.0123   |  0.021  |     909     |   0.0911   | 0.0398  |  0.012  |  0.0698   |    0.793     |
 | neg_sampling_clusterin_low_exposure |  0.0145   |  0.025  |     968     |   0.097    | 0.0419  | 0.0126  |  0.0696   |     0.79     |
 | neg_sampling_clusterin_high_exposure |  0.0133   |  0.022  |     915     |   0.0917   | 0.0407  | 0.0124  |   0.098   |    0.853     |
 | neg_sampling_clusterout_low_exposure |  0.0187   |  0.032  |    1005     |   0.1007   | 0.0481  |  0.013  |  0.0709   |    0.796     |
 | neg_sampling_clusterout_high_exposure |  0.0116   |  0.02   |     918     |   0.092    | 0.0393  | 0.0118  |  0.0887   |    0.836     |
-| neg_sampling_low_exposure          |  0.0145   |  0.025  |     968     |   0.097    | 0.0411  | 0.0123  |  0.0685   |    0.784     |
 | neg_sampling_clustering_exposure_balanced |  0.0121   |  0.021  |     914     |   0.0916   |  0.041  | 0.0118  |  0.0692   |    0.809     |
+| neg_sampling_low_exposure          |  0.0145   |  0.025  |     968     |   0.097    | 0.0411  | 0.0123  |  0.0685   |    0.784     |
+| neg_sampling_high_exposure         |  0.0133   |  0.022  |     915     |   0.0917   | 0.0407  | 0.0124  |   0.098   |    0.853     |
+| neg_sampling_balanced_popularity   |  0.0123   |  0.021  |     909     |   0.0911   | 0.0398  |  0.012  |  0.0698   |    0.793     |
+| clusterin_high_exposure_on_clusterout_low_exposure |  0.0202   |  0.029  |    1146     |   0.1148   | 0.0381  | 0.0104  |  0.1019   |    0.943     |
 
 
 | Model                              | NDCG@5 ↑ | HR@5 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 |------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
-| neg_sampling_balanced_popularity   |   0.011   |  0.017  |     570     |   0.1142   | 0.0599  |  0.017  |  0.1104   |    0.793     |
 | neg_sampling_clusterin_low_exposure |  0.0126   |  0.019  |     609     |   0.122    | 0.0654  | 0.0173  |  0.1074   |     0.79     |
 | neg_sampling_clusterin_high_exposure |  0.0117   |  0.017  |     575     |   0.1152   | 0.0599  | 0.0171  |  0.1465   |    0.853     |
 | neg_sampling_clusterout_low_exposure |  0.0162   |  0.024  |     651     |   0.1305   | 0.0586  | 0.0175  |   0.106   |    0.796     |
 | neg_sampling_clusterout_high_exposure |  0.0101   |  0.015  |     584     |   0.117    | 0.0592  | 0.0166  |  0.1361   |    0.836     |
-| neg_sampling_low_exposure          |  0.0126   |  0.019  |     615     |   0.1232   | 0.0643  | 0.0171  |  0.1058   |    0.784     |
 | neg_sampling_clustering_exposure_balanced |  0.0108   |  0.017  |     582     |   0.1166   | 0.0569  | 0.0165  |   0.114   |    0.809     |
+| neg_sampling_low_exposure          |  0.0126   |  0.019  |     615     |   0.1232   | 0.0643  | 0.0171  |  0.1058   |    0.784     |
+| neg_sampling_high_exposure         |  0.0117   |  0.017  |     575     |   0.1152   | 0.0599  | 0.0171  |  0.1465   |    0.853     |
+| neg_sampling_balanced_popularity   |   0.011   |  0.017  |     570     |   0.1142   | 0.0599  |  0.017  |  0.1104   |    0.793     |
+| clusterin_high_exposure_on_clusterout_low_exposure |  0.0189   |  0.025  |     782     |   0.1567   |  0.04   | 0.0101  |  0.1461   |    0.943     |
+
 
 
 
