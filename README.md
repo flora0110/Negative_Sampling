@@ -137,9 +137,13 @@ folders:
 | Model                              | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 |------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
 | neg_sampling_balanced_popularity   |  0.0123   |  0.021  |     909     |   0.0911   | 0.0398  |  0.012  |  0.0698   |    0.793     |
+| neg_sampling_clusterin_low_exposure |  0.0145   |  0.025  |     968     |   0.097    | 0.0419  | 0.0126  |  0.0696   |     0.79     |
 | neg_sampling_clusterin_high_exposure |  0.0133   |  0.022  |     915     |   0.0917   | 0.0407  | 0.0124  |   0.098   |    0.853     |
 | neg_sampling_clusterout_low_exposure |  0.0187   |  0.032  |    1005     |   0.1007   | 0.0481  |  0.013  |  0.0709   |    0.796     |
+| neg_sampling_clusterout_high_exposure |  0.0116   |  0.02   |     918     |   0.092    | 0.0393  | 0.0118  |  0.0887   |    0.836     |
+| neg_sampling_low_exposure          |  0.0145   |  0.025  |     968     |   0.097    | 0.0411  | 0.0123  |  0.0685   |    0.784     |
 | neg_sampling_clustering_exposure_balanced |  0.0121   |  0.021  |     914     |   0.0916   |  0.041  | 0.0118  |  0.0692   |    0.809     |
+
 ### Baseline on DPO w/o SFT-tuned
 
 | Model                         | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓  | MGU ↓  | ORRatio ↓ | NotInRatio ↓ |
