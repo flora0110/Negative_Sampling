@@ -1,4 +1,47 @@
 # Clustering-Exposure Balanced Sampling
+
+## 90 vedio
+1. What is the key motivation for your project? As in, why should we care about your problem space?
+- 近期很多研究都顯示使用LLM作為推薦系統，仰賴LLM 在預訓練時讀過的大量文字，對商品有內建屬性等隱藏資訊，以及其可以更好的捕捉用戶的完整互動歷史、以及其推理能力，使LLM 可將其與歷史上相似行為的用戶做比對，進行類推，並可更有效地忽略雜訊資料
+- 而微調LLM可以進一步讓模型學會「什麼樣的商品序列 → 對應何種推薦是有意義的」，例如SFT、DPO等技術都可以讓LLM偏好對齊推薦行為，但是這經常會造成過度推薦熱門產品、喪失多樣性和失去genra間的公平性等問題，而在進行DPO前，採用什麼方式做negative sampling會對結果影響很大，因此我們想找一個可以兼顧準確性、公平性、多樣性的negative sampling方法
+
+
+2. What is your key insight? You should convey some "special sauce" that tells the audience what is so neat about your approach.
+- 為了提升準確性，我們想要挑選到true negative sample，而因為原本長尾產品就已經很少出現在正樣本中，為了讓模型有機會學習到長尾產品的知識，我們也想要挑選曝光度較低的產品作為negative sample
+- 同時因為我們想使用self play的方式，通過自我對弈來抑制模型對熱門或同質性項目的偏好，因此模型對於生成candidates的信心、生成candidates是否真的存在在資料庫中，也會影響結果
+- 因此我們會使用Beam search加Constrained Decoding去生成負樣本 candidates，再和使用者的興趣集群做比較，並考慮產品曝光度去選擇負樣本，目前我們的方法，在和我們作為參考的論文方法（SPRec）在同樣使用小型模型進行微調後的結果，在NDCG@5、HR@5 、Diversity、DGU、MGU指標上都大幅進步至少一倍
+
+| Model         | NDCG@5 ↑ | HR@5 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
+|------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
+| SPRec      |  0.0066   |  0.008  |     447     |   0.0896   | 0.0758  | 0.0203  |  0.0912   |    0.671     |
+| Our Method|  0.0235   |  0.036   |     837     |   0.1677    |  0.041    | 0.0103  |  0.1076   |    0.902     |
+
+3. What did you discover or show through your project? You should tell us something interesting as a final takeaway.
+-  因為計算指標的方式是將預測的結果去和資料庫中所有產品名稱計算相似度得到到的前topk個當作推薦結果（排序），所以NotInRatio雖然變高（LLM直接生成的產品不在dataset中），準確率還是可以提高
+
+-  在實驗中我們同時有使用S-DPO(On Softmax Direct Preference Optimization for Recommendation)的方法，引入多個負樣本做DPO，但我們發現如果在使用不同方法取負樣本時，比起一次使用多個負樣本，如果先用簡單的負樣本做DPO，再使用困難的負樣本做一次DPO，效果會比較好
+| Model                              | NDCG@5 ↑ | HR@5 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
+| S-DPO |  0.0108   |  0.017  |     582     |   0.1166   | 0.0569  | 0.0165  |   0.114   |    0.809     |
+| curriculum learning |  0.0189   |  0.025  |     782     |   0.1567   |  0.04   | 0.0101  |  0.1461   |    0.943     |
+
+- 比起使用topK生成candidates, 使用beam生成candidates因為是模型有信心的答案，所以在抑制模型對熱門或同質性項目的偏好效果上更好，同時因為對模型來說也是比較困難的負樣本，因此也學習到比較細緻的分類方式，因此準確率上也有提升
+| Model      | NDCG@10 ↑ | HR@10 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
+| TopK(RN)   | 0.0077    | 0.012   | 694         |   0.0695   | 0.0603  | 0.0155  | 0.0620    | 0.652        |
+| BeamSearch |  0.0187   |  0.032  |    1005     |   0.1007   | 0.0481  |  0.013  |  0.0709   |    0.796     |
+
+- 原本我們是設定“在使用者集群內的高曝光度產品”是true negative sample，但實際上無論是在使用者興趣集群內或在使用者興趣集群外，選用的高曝光度產品度都會降低準確性，因此可以推斷高曝光度產品是高機率會是使用者潛在會選擇的產品，因此應該是歸類在false negative sample, 而在採用低曝光度的產品作為負樣本的前提下，採用使用者興趣集群外的產品會大幅提高準確率(neg_sampling_clusterout_low_exposure)，所以使用使用者興趣集群是可以有效過濾掉false negative sample的
+| Model                              | NDCG@5 ↑ | HR@5 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
+|------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
+| neg_sampling_clusterin_low_exposure |  0.0126   |  0.019  |     609     |   0.122    | 0.0654  | 0.0173  |  0.1074   |     0.79     |
+| neg_sampling_clusterin_high_exposure |  0.0117   |  0.017  |     575     |   0.1152   | 0.0599  | 0.0171  |  0.1465   |    0.853     |
+| neg_sampling_clusterout_low_exposure |  0.0162   |  0.024  |     651     |   0.1305   | 0.0586  | 0.0175  |   0.106   |    0.796     |
+| neg_sampling_clusterout_high_exposure |  0.0101   |  0.015  |     584     |   0.117    | 0.0592  | 0.0166  |  0.1361   |    0.836     |
+| neg_sampling_lowest_exposure          |  0.0126   |  0.019  |     615     |   0.1232   | 0.0643  | 0.0171  |  0.1058   |    0.784     |
+- 同時我們也進行了消融實驗，不去做興趣集群，單純選擇candidates中曝光度最低的產品作為負樣本(neg_sampling_lowest_exposure)，可以看到準確性仍低於neg_sampling_clusterout_low_exposure許多，進一步證明了使用使用者興趣集群是可以有效過濾掉false negative sample
+
+
+
+
 ## Overview
 
 This pipeline generates a **balanced and diverse DPO dataset** using:
@@ -92,8 +135,8 @@ folders:
 
 | Model                              | NDCG@5 ↑ | HR@5 ↑ | Diversity ↑ | DivRatio ↑ | DGU ↓   | MGU ↓   | ORRatio ↓ | NotInRatio ↓ |
 |------------------------------------|:---------:|:-------:|:-----------:|:----------:|:-------:|:-------:|:---------:|:------------:|
-| neg_sampling_low_exposure          |  0.0066   |  0.008  |     447     |   0.0896   | 0.0758  | 0.0203  |  0.0912   |    0.671     |
-| neg_sampling_low_exposure          |  0.0061   |  0.007  |     460     |   0.0922   | 0.0725  | 0.0198  |  0.0884   |    0.714     |
+| SPRec          |  0.0066   |  0.008  |     447     |   0.0896   | 0.0758  | 0.0203  |  0.0912   |    0.671     |
+| SPRec_wo_SFT(but DPO on SFT-tuned model)           |  0.0061   |  0.007  |     460     |   0.0922   | 0.0725  | 0.0198  |  0.0884   |    0.714     |
 
 folders:
 - SPRec: output/SPRec_on_SFT-1
