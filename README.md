@@ -1,4 +1,4 @@
-# Clustering-Exposure Balanced Sampling
+# Exposure- and Clustering-Aware Self-Play for LLM-based Recommendation
 
 ## 90 vedio
 1. What is the key motivation for your project? As in, why should we care about your problem space?
